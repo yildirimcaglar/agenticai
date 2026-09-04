@@ -1,0 +1,40 @@
+---
+title: "Week 2b — How LLMs learn"
+subtitle: "Gradient descent, backpropagation, and the training stages that end in agents"
+draft: true
+---
+
+## Before class
+
+No new installs today — Tuesday's environment is all we need. If you skipped the
+lab notebook, finish sections 1–4 before class; Thursday's material assumes you've
+made at least a few API calls with your own hands.
+
+## What we're doing today
+
+Tuesday we saw what a model *does*; today we ask where its 175 billion numbers
+come from. We'll build up the training story in three stages: pretraining
+(next-token prediction at internet scale), post-training (instruction tuning and
+RLHF — how an autocomplete becomes an assistant), and the part that makes this an
+agents course: how models are trained to reason and to call tools. Along the way
+you'll see gradient descent and backpropagation on an actual network diagram,
+not just as formulas.
+
+Two things I want you to take out of Thursday:
+
+1. Every capability you'll use this semester — chat, reasoning, tool calling —
+   is a *training outcome*, not a magic property. When a model "decides" to call
+   a tool, it's sampling tokens that training made likely.
+2. Prompting works because it steers what training built. That's why the
+   readings this week (chain-of-thought, self-consistency, zero-shot reasoning)
+   are prompting papers — and why AADA1 asks you to measure their effect
+   rather than take my word for it.
+
+## Reminders
+
+- **AADA1 is out** — due at the start of Week 3. Everything you need is covered
+  by this week's lab notebook and readings. Start early; API debugging always
+  takes longer than you think.
+- Readings for the quiz pool this week: Wei et al. (chain-of-thought),
+  Wang et al. (self-consistency), Kojima et al. (zero-shot reasoners), plus one
+  of the prompting guides — your choice.

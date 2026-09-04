@@ -1,0 +1,109 @@
+---
+title: "Walkthrough: the sampling knobs"
+subtitle: "Week 2a — follow along during lecture"
+draft: true
+format:
+  html:
+    format-links:
+      - format: revealjs
+        text: "Present as slides"
+  revealjs:
+    output-file: walkthrough-slides.html
+    theme: [default, custom-reveal.scss]
+    slide-number: true
+    code-line-numbers: true
+    footer: "Agentic AI · Week 2a"
+---
+
+::: {.content-visible unless-format="revealjs"}
+This page and the in-class slides are the same document, rendered two ways —
+so what you see on screen in lecture is exactly what you can copy from here.
+Run the cells in your own notebook as we go; if you fall behind, everything
+needed to catch up is on this page.
+:::
+
+:::: {.content-visible when-format="revealjs"}
+
+## Where we are
+
+The model hands us a **probability distribution** over the next token.
+
+How we draw from it is *our* decision — made per API call, with three knobs:
+
+- `temperature` — reshape the distribution
+- `top_p` — cut off its tail
+- `max_tokens` — cap the output
+
+::::
+
+## Step 1 — A model we're allowed to experiment on
+
+Reasoning-first models (the `gpt-5` family) fix their sampling internally and
+ignore these knobs, so we switch to a standard chat model:
+
+```{.python code-line-numbers="3"}
+from langchain.chat_models import init_chat_model
+
+sampler = init_chat_model(model="gpt-4.1-mini")
+```
+
+## Step 2 — A helper that repeats the same prompt
+
+Sampling is random — a single call proves nothing. We always look at several draws:
+
+```{.python code-line-numbers="1-4|6"}
+def sample_n(prompt, n=4, **model_kwargs):
+    """Call the model n times with the same settings."""
+    m = init_chat_model(model="gpt-4.1-mini", **model_kwargs)
+    return [m.invoke(prompt).content.strip() for _ in range(n)]
+
+prompt = "Invent a name for a coffee shop run by robots. Reply with the name only."
+```
+
+:::: {.content-visible when-format="revealjs"}
+::: {.notes}
+Walk the highlight: signature → constructor with kwargs → the n draws → the call.
+Ask the class to predict outputs before advancing.
+:::
+::::
+
+## Step 3 — Cold vs. hot
+
+Before running: **write down what you expect** at `0.0` versus `1.4`.
+
+```{.python}
+for out in sample_n(prompt, temperature=0.0):   # <1>
+    print("  •", out)
+
+for out in sample_n(prompt, temperature=1.4):   # <2>
+    print("  •", out)
+```
+1. Near-greedy: sharpened distribution — expect (almost) identical names.
+2. Flattened distribution: tail tokens get a vote — variety, occasionally nonsense.
+
+## Step 3 — What you should see
+
+Your output won't match your neighbor's exactly (that's the lesson), but the
+shape should look like this:
+
+```text
+temperature = 0.0          temperature = 1.4
+  • Brew Bots                • Circuit & Crema
+  • Brew Bots                • The Rusty Filament
+  • Brew Bots                • Steamwork Sips
+  • Brew Bots                • Perky Processor
+```
+
+## Step 4 — What to remember {.smaller}
+
+| Setting | Use when | Avoid when |
+|---|---|---|
+| `temperature` 0–0.3 | tool calls, extraction, agents | brainstorming |
+| `temperature` 0.8–1.2 | idea generation, drafts | anything schema-bound |
+| `top_p` < 1 | trimming the weird tail | tuning together with high temperature |
+
+::: {.callout-important title="The rule I'll keep repeating"}
+Agents loop. A 2% weirdness rate per step compounds across 20 steps into roughly
+a one-in-three chance of a derailed trajectory. Keep agent temperature low; save
+the high settings for steps that are supposed to diverge.
+:::

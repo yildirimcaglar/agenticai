@@ -1,0 +1,9 @@
+/*-- scss:defaults --*/
+// Northeastern brand for slide decks
+$link-color: #C8102E;
+$code-color: #C8102E;
+
+/*-- scss:rules --*/
+.reveal .slide-number, .reveal .footer {
+  color: #C8102E;
+}

@@ -1,0 +1,101 @@
+---
+title: "Week 2a — How LLMs work"
+subtitle: "Tokens, the transformer, and the sampling knobs you'll use in every API call"
+draft: true
+---
+
+**In class today:** [code walkthrough](walkthrough.qmd) · [same content as slides](walkthrough-slides.html)
+
+## Before class
+
+Pull the latest materials and set up this week's environment. This takes about
+two minutes — please have it done before you sit down:
+
+```bash
+git pull
+cd weeks/week-02
+uv sync
+```
+
+If `uv sync` fails, run the environment checker (`python env_utils.py`) and
+bring me the output — don't lose your morning to a broken install.
+
+## What we're doing today
+
+In Week 1 I asked you to treat the LLM as a black box. Today we open it. We'll
+follow one prompt through the whole pipeline — tokenization, embeddings, the
+transformer, and finally sampling — and then you'll make your first API calls
+through LangChain in the lab notebook. By the end of class I want you to be able
+to explain why the same prompt can give different answers, and to set
+`temperature` and `top_p` on purpose rather than by superstition.
+
+The lab notebook is in the repo at `weeks/week-02/week02_llm_api_basics.ipynb`.
+Work through it top to bottom; the exercises at the end are your warm-up for
+AADA1, which I'm releasing today.
+
+## Snippets for the lab
+
+These are the pieces you'll need during class, in the order we'll use them.
+Hover over the numbered markers for the explanation of each line.
+
+### Your first model call
+
+```{.python}
+from dotenv import load_dotenv
+from langchain.chat_models import init_chat_model
+
+load_dotenv()                                     # <1>
+model = init_chat_model(model="gpt-5-nano")       # <2>
+response = model.invoke("Why is the sky blue?")   # <3>
+print(response.content)
+```
+1. Reads your API keys from `.env`. Never hard-code a key in a source file — I will notice, and so will the internet.
+2. One constructor for every provider; LangChain infers OpenAI from the model name.
+3. Returns an `AIMessage`, not a string. Look at `response.usage_metadata` — that's your token bill.
+
+### The same call on a different provider
+
+This is the reason we're using a framework at all — swap one string and nothing
+else changes:
+
+::: {.panel-tabset}
+## OpenAI
+
+```python
+model = init_chat_model(model="gpt-5-nano")
+```
+
+## Anthropic
+
+```python
+model = init_chat_model(model="claude-sonnet-4-6")   # needs ANTHROPIC_API_KEY
+```
+
+## Google
+
+```python
+from langchain_google_genai import ChatGoogleGenerativeAI
+model = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite")
+```
+:::
+
+::: {.callout-warning title="A warning about online tutorials"}
+We use LangChain 1.x. Most tutorials you'll find online predate it: if you see
+`LLMChain`, `AgentExecutor`, or chains of `|` pipes, that's the old API — it now
+lives in a package called `langchain-classic`, and it is not what we write in
+this course. When in doubt, use the current docs, not a 2024 blog post.
+:::
+
+## Links I'll show on screen
+
+- [Tokenizer playground](https://platform.openai.com/tokenizer) — for the tokenization exercise
+- [LangChain docs — models and messages](https://docs.langchain.com)
+
+## After class
+
+Optional but genuinely worth your time: Jay Alammar's
+[Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+covers today's architecture material with better animations than I can draw, and
+[3Blue1Brown's neural network series](https://www.3blue1brown.com/topics/neural-networks)
+(chapters 1–4) is the best preparation for Thursday, when we get to gradient
+descent and backpropagation.

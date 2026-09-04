@@ -1,0 +1,42 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+
+website:
+  title: "Agentic AI - Fall 2026 | Northeastern CS"
+  site-url: "https://yildirimcaglar.github.io/agenticai/"
+  repo-url: "https://github.com/yildirimcaglar/agenticai"
+  navbar:
+    background: "#C8102E"
+    search: true
+  page-footer:
+    center: |
+      Caglar Yildirim, PhD · Northeastern University · Khoury College of Computer Sciences
+  sidebar:
+    style: docked
+    collapse-level: 2
+    contents:
+      - href: index.qmd
+        text: "Home"
+      # Release a week by uncommenting its section and removing `draft: true`
+      # from its pages, then re-render.
+      # - section: "Week 2 — LLM Foundations"
+      #   contents:
+      #     - href: week2a.qmd
+      #       text: "Week 2a · How LLMs work"
+      #     - href: week2b.qmd
+      #       text: "Week 2b · How LLMs learn"
+
+format:
+  html:
+    theme: [cosmo, custom.scss]
+    toc: true
+    code-copy: true
+    code-annotations: hover
+    highlight-style: github
+    mainfont: "Avenir Next, Helvetica Neue, sans-serif"
+
+execute:
+  enabled: false
