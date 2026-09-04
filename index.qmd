@@ -7,4 +7,4 @@ Welcome to Agentic AI. This site is where I post everything you need for each cl
 setup instructions, the code we build together, links I'll reference on screen,
 and anything you'll want to copy and paste during lecture.
 
-- Prof. Yildirim
+Prof. Yildirim
