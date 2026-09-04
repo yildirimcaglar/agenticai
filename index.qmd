@@ -3,6 +3,8 @@ title: "Agentic AI — Course Materials"
 toc: false
 ---
 
-Welcome. This site is where I post everything you need for each class session:
+Welcome to Agentic AI. This site is where I post everything you need for each class session:
 setup instructions, the code we build together, links I'll reference on screen,
 and anything you'll want to copy and paste during lecture.
+
+- Prof. Yildirim
